@@ -100,7 +100,7 @@ struct Edge
 
 struct ActivePoint
 {
-	Node *node;//活动点 
+	Node *node;//活动节点 
 	Edge *edge;//活动边 
 	int length;//活动长度 
 	ActivePoint(){node=NULL;edge=NULL;length=0;}
@@ -141,7 +141,7 @@ class SuffixTree
 		void showtree(){show(root,0,0);}//打印后缀树 
 		void show(Node *p,int repeat,int len);//打印后缀树实际函数 
 		
-		void test()//测试用函数，展示当前活动节点，后缀字符，剩余后缀数等信息 
+		void test()//测试用函数，展示当前活动点，后缀字符，剩余后缀数等信息 
 		{
 			if(activepoint->edge!=NULL)
 			{
@@ -374,7 +374,7 @@ int SuffixTree::find(char x)
 	Node *&apnode=activepoint->node;
 	int &aplen=activepoint->length;
 	if(apedge==NULL)
-	{//无活动边，则从活动点的子节点开始查找
+	{//无活动边，则从活动节点的子节点开始查找
 		for(int i=0;i<apnode->count;i++)
 		{
 			//cout<<i;
@@ -384,8 +384,8 @@ int SuffixTree::find(char x)
 		        aplen++;
 		        apedge=apnode->child[i];
 		        if(aplen==apedge->str.length())
-	            {//这里出现了一个修改活动节点的规则：即如果活动边上的所有字符全部都被匹配完了
-			     //(级活动边上的字符数==活动长度)，则将活动边晋升为活动节点，同时重置活动长度为0。
+	            {//这里出现了一个修改活动点的规则：即如果活动边上的所有字符全部都被匹配完了
+			     //(级活动边上的字符数==活动长度)，则将活动边晋升为活动点，同时重置活动长度为0。
 			     //所以下次查找时就得从该节点开始了，而不是根节点了。
 			
 			        apnode=apedge->below;
@@ -405,8 +405,8 @@ int SuffixTree::find(char x)
 	    {
 	    	aplen++;
 	        if(aplen==apedge->str.length())
-	        {//这里出现了一个修改活动节点的规则：即如果活动边上的所有字符全部都被匹配完了
-			 //(级活动边上的字符数==活动长度)，则将活动边晋升为活动节点，同时重置活动长度为0。
+	        {//这里出现了一个修改活动点的规则：即如果活动边上的所有字符全部都被匹配完了
+			 //(级活动边上的字符数==活动长度)，则将活动边晋升为活动点，同时重置活动长度为0。
 			 //所以下次查找时就得从该节点开始了，而不是根节点了。
 			
 			    apnode=apedge->below;
@@ -475,7 +475,7 @@ void SuffixTree::deal(string str,int currentindex)
 	int &aplen=activepoint->length;
 	if(reminder==1)//如果剩余后缀数为1 //pay attention to//是否一定为根，当reminder为1的时候 
 	{
-		if(apnode==root)//如果活动点是根节点 
+		if(apnode==root)//如果活动节点是根节点 
 		{//新建节点 
 			Node *tempnode1=new Node(currentindex-suffixarray.length()+1);
 			Edge *tempedge1=new Edge(apnode,tempnode1,str.substr(currentindex));
@@ -488,7 +488,7 @@ void SuffixTree::deal(string str,int currentindex)
             //cout<<"\n----------------------------------------------\n";
 			return;
 		}
-		else//如果活动点不是根节点,apnode!=root 
+		else//如果活动节点不是根节点,apnode!=root 
 		{
 			
 		}
@@ -501,7 +501,7 @@ void SuffixTree::deal(string str,int currentindex)
                 //o插入叶子之后，活跃节点依旧为根节点；
                 //o活跃边更新为我们接下来要更新的后缀的首字母； 
                 //o活跃半径减1;
-                if(apedge==NULL)//如果活动边不存在，即说明活动点下需要新创建节点
+                if(apedge==NULL)//如果活动边不存在，即说明活动节点下需要新创建节点
 				{
 					Node *tempnode1=new Node(currentindex);
 					Edge *tempedge1=new Edge(apnode,tempnode1,str.substr(currentindex));
@@ -601,11 +601,11 @@ void SuffixTree::deal(string str,int currentindex)
                 //我们就转移到根节点，将活跃节点更新为根节点但活跃半径以及活跃边不变。
                 
                 char temp;
-				if(apedge==NULL)//如果活动边不存在，即说明活动点下需要新创建节点
+				if(apedge==NULL)//如果活动边不存在，即说明活动节点下需要新创建节点
 				{
 					Node *tempnode1=new Node(currentindex-suffixarray.length()+1);
 					Edge *tempedge1=new Edge(apnode,tempnode1,str.substr(currentindex));
-					//这个时候活动点怎么定义？？？？ //依旧当做新建的内部节点处理 	
+					//这个时候活动节点怎么定义？？？？ //依旧当做新建的内部节点处理 	
 				}
 				else 
 				{
@@ -620,7 +620,7 @@ void SuffixTree::deal(string str,int currentindex)
 						
 						Node *tempnode1=new Node();
 						//cout<<"what happened?\n";//这里曾经出现一个问题就是前面的"aplen--"与"int m=find(edge->str[0])"顺序错误而产生的问题 
-						//cout<<apedge->str<<" "<<aplen;//当顺序反后，活动节点可能会错误的升级，而这不是我想要的 
+						//cout<<apedge->str<<" "<<aplen;//当顺序反后，活动点可能会错误的升级，而这不是我想要的 
 						//cout<<apedge->str.substr(aplen)<<"\n";
 						Edge *tempedge1=new Edge(tempnode1,apedge->below,apedge->str.substr(aplen));
 					    Edge *tempedge2=new Edge(apnode,m,tempnode1,apedge->str.substr(0,aplen));
@@ -658,7 +658,7 @@ void SuffixTree::deal(string str,int currentindex)
 				}
 				
 
-				//开始沿着后缀链表寻找,并且重置活动节点 
+				//开始沿着后缀链表寻找,并且重置活动点 
 				if(apnode->next!=NULL)//如果有连接，就进入 
 				{
 					
@@ -694,7 +694,7 @@ void SuffixTree::deal(string str,int currentindex)
 					 
 					
 				}
-				else//如果当前节点无连接，就置活动点为根节点 
+				else//如果当前节点无连接，就置活动节点为根节点 
 				{
 					apnode=root;
 					apedge=NULL;
@@ -788,5 +788,4 @@ void SuffixTree::show(Node *p,int repeat,int len)
 	}
 	cout<<"\n";
 }
-
 
