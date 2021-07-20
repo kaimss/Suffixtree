@@ -10,7 +10,7 @@
 
 # 2.算法设计
 
-本文章利用的是Ukkonen算法构建后缀树，在 1995 年，Esko Ukkonen 发表了论文[《On-line construction of suffix trees》](http://www.cs.helsinki.fi/u/ukkonen/SuffixT1withFigs.pdf)，描述了在线性时间内构建后缀树的方法。 本文章参考[数据结构系列——后缀树（附Java实现代码）](http://vickyqi.com/2015/11/27/数据结构系列——后缀树（附Java实现代码）/)，理解之后做了适当的改进并用c++语言实现，代码在dev-cpp 5.11已测试。
+本文章利用的是Ukkonen算法构建后缀树，在 1995 年，Esko Ukkonen 发表了论文[《On-line construction of suffix trees》](http://www.cs.helsinki.fi/u/ukkonen/SuffixT1withFigs.pdf)，描述了在线性时间内构建后缀树的方法。 本文章参考[数据结构系列——后缀树（附Java实现代码）](https://www.cnblogs.com/gaochundong/p/suffix_tree.html)，理解之后做了适当的改进并用c++语言实现，代码在dev-cpp 5.11已测试。
 
 首先解释一下将要用到的几个概念：**活动点(包括活动节点，活动边，活动长度)**，**剩余后缀数**。活动点中的**活动节点**：是用于查找一个后缀是否已经存在这棵树里，即查找的时候从活动节点的子节点开始查找，同时当需要插入边的时候也是插入到该节点下；而**活动边**则是每次需要进行分割的边，即成为活动边就意味着需要被分割；而**活动长度**则是指明从活动边的哪个位置开始分割。**剩余后缀数**是我们需要插入的后缀的数量，说明程序员点就是缓存的数量，因为每次如果要插入的后缀存在，则缓存起来。另外还用到了后缀字符数组，表明将要处理的后缀字符。
 
